@@ -3,4 +3,4 @@
 #    controller: App\Controller\DefaultController::index
 #helloPage:
 #    path: /ola
-#    controller: App\Controller\HelloWorldController::olaMundo
+#    controller: App\Controller\PerguntasController::olaMundo

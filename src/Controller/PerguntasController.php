@@ -10,22 +10,30 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 
-class HelloWorldController extends AbstractController
+class PerguntasController extends AbstractController
 {
     /**
-     * @Route("/ola/{pagina}", name="helloPage")
+     * @Route("/", name="index")
      */
-    public function olaMundo(Request $request, string $pagina = '0'): Response{
+    public function index(Request $request): Response{
+        $query = $this->getDoctrine()
+            ->getRepository(Perguntas::class)
+            ->findAll();
 
-        $entityManager = $this->getDoctrine()->getManager();
-        $perguntas = new Perguntas();
-        $perguntas->setQuestao('Mouse é um periferico de:');
-        $perguntas->setRespostaCorretaId(0);
-        $perguntas->setResposta(
-            $this->getDoctrine()
-            ->getRepository(Respostas::class)
-            ->find(0)
-        );
+        $res = array();
+        foreach ($query as $item){
+            $res[] = array(
+              'id'=>$item->getId(),
+              'respostaCorreta_id'=>$item->getRespostaCorretaId(),
+              'questao'=>$item->getQuestao(),
+            );
+        }
+
+        return $this->json($res);
+    }
+
+    public function save(Request $request): Response{
+        return $this->json(['Vazio'=>0]);
 
         $entityManager->persist($perguntas);
         $entityManager->flush();
