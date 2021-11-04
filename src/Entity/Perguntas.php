@@ -38,9 +38,15 @@ class Perguntas
      */
     private $usuario;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tentativas", mappedBy="pergunta")
+     */
+    private $tentativas;
+
     public function __construct()
     {
         $this->respostas = new ArrayCollection();
+        $this->tentativas = new ArrayCollection();
     }
 
     public function getId(): ?int { return $this->id; }
@@ -69,17 +75,19 @@ class Perguntas
     /**
      * @return mixed
      */
-    public function getUsuario()
-    {
-        return $this->usuario;
-    }
-
+    public function getUsuario() { return $this->usuario; }
     /**
      * @param mixed $usuario
      */
-    public function setUsuario($usuario): void
-    {
-        $this->usuario = $usuario;
-    }
+    public function setUsuario($usuario): void { $this->usuario = $usuario; }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getTentativas(): ArrayCollection { return $this->tentativas; }
+    /**
+     * @param ArrayCollection $tentativas
+     */
+    public function setTentativas(ArrayCollection $tentativas): void { $this->tentativas = $tentativas; }
 
 }

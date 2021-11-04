@@ -38,65 +38,43 @@ class Usuario
      */
     private $perguntas;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Tentativas", mappedBy="usuario")
+     */
+    private $tentativas;
+
     public function __construct()
     {
         $this->perguntas = new ArrayCollection();
+        $this->tentativas = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function getId(): ?int { return $this->id; }
 
-    public function getNome(): ?string
-    {
-        return $this->nome;
-    }
+    public function getNome(): ?string { return $this->nome; }
+    public function setNome(string $nome): self { $this->nome = $nome; return $this; }
 
-    public function setNome(string $nome): self
-    {
-        $this->nome = $nome;
+    public function getSenha(): ?string { return $this->senha; }
+    public function setSenha(string $senha): self { $this->senha = $senha; return $this; }
 
-        return $this;
-    }
-
-    public function getSenha(): ?string
-    {
-        return $this->senha;
-    }
-
-    public function setSenha(string $senha): self
-    {
-        $this->senha = $senha;
-
-        return $this;
-    }
-
-    public function getPrivilegio(): ?int
-    {
-        return $this->privilegio;
-    }
-
-    public function setPrivilegio(int $privilegio): self
-    {
-        $this->privilegio = $privilegio;
-
-        return $this;
-    }
+    public function getPrivilegio(): ?int { return $this->privilegio; }
+    public function setPrivilegio(int $privilegio): self { $this->privilegio = $privilegio; return $this; }
 
     /**
      * @return ArrayCollection
      */
-    public function getPerguntas(): ArrayCollection
-    {
-        return $this->perguntas;
-    }
-
+    public function getPerguntas(): ArrayCollection { return $this->perguntas; }
     /**
      * @param ArrayCollection $perguntas
      */
-    public function setPerguntas(ArrayCollection $perguntas): void
-    {
-        $this->perguntas = $perguntas;
-    }
+    public function setPerguntas(ArrayCollection $perguntas): void { $this->perguntas = $perguntas; }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getTentativas(): ArrayCollection { return $this->tentativas; }
+    /**
+     * @param ArrayCollection $tentativas
+     */
+    public function setTentativas(ArrayCollection $tentativas): void { $this->tentativas = $tentativas; }
 }
