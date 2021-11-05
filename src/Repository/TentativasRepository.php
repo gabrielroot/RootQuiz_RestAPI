@@ -2,25 +2,25 @@
 
 namespace App\Repository;
 
-use App\Entity\Tentativas;
+use App\Entity\Tentativa;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Tentativas|null find($id, $lockMode = null, $lockVersion = null)
- * @method Tentativas|null findOneBy(array $criteria, array $orderBy = null)
- * @method Tentativas[]    findAll()
- * @method Tentativas[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Tentativa|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Tentativa|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Tentativa[]    findAll()
+ * @method Tentativa[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class TentativasRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Tentativas::class);
+        parent::__construct($registry, Tentativa::class);
     }
 
     // /**
-    //  * @return Tentativas[] Returns an array of Tentativas objects
+    //  * @return Tentativa[] Returns an array of Tentativa objects
     //  */
     /*
     public function findByExampleField($value)
@@ -37,7 +37,7 @@ class TentativasRepository extends ServiceEntityRepository
     */
 
     /*
-    public function findOneBySomeField($value): ?Tentativas
+    public function findOneBySomeField($value): ?Tentativa
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.exampleField = :val')

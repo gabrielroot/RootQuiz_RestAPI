@@ -34,12 +34,12 @@ class Usuario
     private $privilegio;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Perguntas", mappedBy="usuario")
+     * @ORM\OneToMany(targetEntity="App\Entity\Pergunta", mappedBy="usuario")
      */
     private $perguntas;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tentativas", mappedBy="usuario")
+     * @ORM\OneToMany(targetEntity="App\Entity\Tentativa", mappedBy="usuario")
      */
     private $tentativas;
 

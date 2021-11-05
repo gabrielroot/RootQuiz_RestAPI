@@ -2,42 +2,37 @@
 
 namespace App\Repository;
 
-use App\Entity\Perguntas;
+use App\Entity\Pergunta;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Perguntas|null find($id, $lockMode = null, $lockVersion = null)
- * @method Perguntas|null findOneBy(array $criteria, array $orderBy = null)
- * @method Perguntas[]    findAll()
- * @method Perguntas[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Pergunta|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Pergunta|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Pergunta[]    findAll()
+ * @method Pergunta[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class PerguntasRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Perguntas::class);
+        parent::__construct($registry, Pergunta::class);
     }
 
-    // /**
-    //  * @return Perguntas[] Returns an array of Perguntas objects
-    //  */
-    /*
-    public function findByExampleField($value)
+     /**
+      * @return Pergunta[] Returns an array of Pergunta objects
+      */
+    public function getPerguntasRespostas()
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+            ->innerJoin('p.respostas','r','WITH')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
-    public function findOneBySomeField($value): ?Perguntas
+    public function findOneBySomeField($value): ?Pergunta
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.exampleField = :val')

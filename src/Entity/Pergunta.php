@@ -5,11 +5,12 @@ namespace App\Entity;
 use App\Repository\PerguntasRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity(repositoryClass=PerguntasRepository::class)
  */
-class Perguntas
+class Pergunta
 {
     /**
      * @ORM\Id
@@ -29,7 +30,7 @@ class Perguntas
     private $questao;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Respostas", mappedBy="pergunta")
+     * @ORM\OneToMany(targetEntity="App\Entity\Resposta", mappedBy="pergunta", cascade={"remove"})
      */
     private $respostas;
 
@@ -39,7 +40,7 @@ class Perguntas
     private $usuario;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tentativas", mappedBy="pergunta")
+     * @ORM\OneToMany(targetEntity="App\Entity\Tentativa", mappedBy="pergunta")
      */
     private $tentativas;
 
@@ -49,6 +50,8 @@ class Perguntas
         $this->tentativas = new ArrayCollection();
     }
 
+
+
     public function getId(): ?int { return $this->id; }
 
     public function getQuestao(): ?string { return $this->questao; }
@@ -57,16 +60,16 @@ class Perguntas
     /**
      * @return mixed
      */
-    public function getrespostaCorretaId() {  return $this->respostaCorretaId; }
+    public function getRespostaCorretaId() {  return $this->respostaCorretaId; }
     /**
      * @param mixed $respostaCorretaId
      */
-    public function setrespostaCorretaId($respostaCorretaId): void { $this->respostaCorretaId = $respostaCorretaId; }
+    public function setRespostaCorretaId($respostaCorretaId): void { $this->respostaCorretaId = $respostaCorretaId; }
 
     /**
      * @return ArrayCollection
      */
-    public function getRespostas(): ArrayCollection { return $this->respostas; }
+    public function getRespostas(): PersistentCollection { return $this->respostas; }
     /**
      * @param ArrayCollection $respostas
      */

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=RespostasRepository::class)
  */
-class Respostas
+class Resposta
 {
     /**
      * @ORM\Id
@@ -24,7 +24,7 @@ class Respostas
     private $alternativa;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Perguntas", inversedBy="respostas")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Pergunta", inversedBy="respostas")
      */
     private $pergunta;
 
