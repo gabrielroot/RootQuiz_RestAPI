@@ -87,7 +87,7 @@ class UsuarioController extends AbstractController
 
         $usuarioEncontrado = $usuarioRepository->find($id);
         if(is_null($usuarioEncontrado)){
-            return $this->json(["Erro"=>'Usuario não encontrada']);
+            return $this->json(["Erro"=>'Usuario não encontrado']);
         }
 
         $entityManager->remove($usuarioEncontrado);

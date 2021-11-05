@@ -24,7 +24,7 @@ class PerguntaController extends AbstractController
 
         $perguntas = array();
         foreach ($query as $item){
-            $alternativas = array('A','B','C','D');
+            $alternativas = array('A','B','C','D','E','F','G');
             $respostas = array();
             $i = 0;
             foreach ($item->getRespostas() as $valor){
@@ -83,6 +83,7 @@ class PerguntaController extends AbstractController
      * @Route("/pergunta/{id}", name="updatePergunta", methods="PUT")
      */
     public function update(Request $request, int $id): Response{
+        $respostaRepository = $this->getDoctrine()->getRepository(Resposta::class);
         $usuarioRepository = $this->getDoctrine()->getRepository(Usuario::class);
         $perguntaRepository = $this->getDoctrine()->getRepository(Pergunta::class);
 
@@ -108,6 +109,20 @@ class PerguntaController extends AbstractController
 
         if(key_exists('respostaCorreta',$body))
             $perguntaEncontrada->setRespostaCorreta($body['respostaCorreta']);
+
+        if(key_exists('respostas', $body))
+            foreach ($body['respostas'] as $item){
+                $resposta = $respostaRepository->find($item['id']);
+                if(is_null($resposta)){
+                    $resposta = new Resposta();
+                    $resposta->setPergunta($perguntaEncontrada);
+                }
+
+                $resposta->setAlternativa($item['alternativa']);
+
+                $entityManager->persist($resposta);
+                $entityManager->flush();
+            }
 
 
         $entityManager->persist($perguntaEncontrada);

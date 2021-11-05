@@ -40,7 +40,6 @@ class TentativaControler extends AbstractController
         return $this->json($tentativas);
     }
 
-
     /**
      * @Route("/tentativa", name="saveTentativa", methods="POST")
      */
