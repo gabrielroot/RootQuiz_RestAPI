@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PerguntaController extends AbstractController
 {
     /**
-     * @Route("/perguntas", name="index", methods="GET")
+     * @Route("/perguntas", name="indexPergunta", methods="GET")
      */
     public function index(): Response{
         $query = $this->getDoctrine()
@@ -45,7 +45,7 @@ class PerguntaController extends AbstractController
     }
 
     /**
-     * @Route("/pergunta", name="save", methods="POST")
+     * @Route("/pergunta", name="savePergunta", methods="POST")
      */
     public function save(Request $request): Response{
         $usuarioRepository = $this->getDoctrine()->getRepository(Usuario::class);
@@ -74,11 +74,11 @@ class PerguntaController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->json(["Sucess"=>"OK"]);
+        return $this->json([],201);
     }
 
     /**
-     * @Route("/pergunta/{id}", name="update", methods="PUT")
+     * @Route("/pergunta/{id}", name="updatePergunta", methods="PUT")
      */
     public function update(Request $request, int $id): Response{
         $usuarioRepository = $this->getDoctrine()->getRepository(Usuario::class);
@@ -92,23 +92,30 @@ class PerguntaController extends AbstractController
             return $this->json(["Erro"=>'Pergunta não encontrada']);
         }
 
-        $usuarioEncontrado = $usuarioRepository->find($body['usuario']);
-        if(is_null($usuarioEncontrado)){
-            return $this->json(["Erro"=>'Usuário não encontrado']);
+        if(key_exists('usuario', $body)) {
+            $usuarioEncontrado = $usuarioRepository->find($body['usuario']);
+            if (is_null($usuarioEncontrado)) {
+                return $this->json(["Erro" => 'Usuário não encontrado']);
+            }
+
+            $perguntaEncontrada->setUsuario($usuarioEncontrado);
         }
 
-        $perguntaEncontrada->setQuestao($body['questao']);
-        $perguntaEncontrada->setRespostaCorreta($body['respostaCorreta']);
-        $perguntaEncontrada->setUsuario($usuarioEncontrado);
+        if(key_exists('questao',$body))
+            $perguntaEncontrada->setQuestao($body['questao']);
+
+        if(key_exists('respostaCorreta',$body))
+            $perguntaEncontrada->setRespostaCorreta($body['respostaCorreta']);
+
 
         $entityManager->persist($perguntaEncontrada);
         $entityManager->flush();
 
-        return $this->json(["Sucess"=>"OK"]);
+        return $this->json([], 200);
     }
 
     /**
-     * @Route("/pergunta/{id}", name="delete", methods="DELETE")
+     * @Route("/pergunta/{id}", name="deletePergunta", methods="DELETE")
      */
     public function delete(int $id): Response{
         $perguntaRepository = $this->getDoctrine()->getRepository(Pergunta::class);
@@ -123,6 +130,6 @@ class PerguntaController extends AbstractController
         $entityManager->remove($perguntaEncontrada);
         $entityManager->flush();
 
-        return $this->json(["Sucess"=>"OK"]);
+        return $this->json([],200);
     }
 }
