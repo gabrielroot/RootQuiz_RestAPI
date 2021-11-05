@@ -1,0 +1,6 @@
+#index:
+#    path: /
+#    controller: App\Controller\DefaultController::index
+#helloPage:
+#    path: /ola
+#    controller: App\Controller\PerguntaController::olaMundo
