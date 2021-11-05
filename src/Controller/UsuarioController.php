@@ -8,7 +8,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use function Symfony\Component\String\u;
 
 class UsuarioController extends AbstractController
 {
@@ -73,6 +72,25 @@ class UsuarioController extends AbstractController
             $usuarioEncontrado->setSenha($body['senha']);
 
         $entityManager->persist($usuarioEncontrado);
+        $entityManager->flush();
+
+        return $this->json([],200);
+    }
+
+    /**
+     * @Route("/usuario/{id}", name="deleteUsuario", methods="DELETE")
+     */
+    public function delete(int $id): Response{
+        $usuarioRepository = $this->getDoctrine()->getRepository(Usuario::class);
+
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $usuarioEncontrado = $usuarioRepository->find($id);
+        if(is_null($usuarioEncontrado)){
+            return $this->json(["Erro"=>'Usuario não encontrada']);
+        }
+
+        $entityManager->remove($usuarioEncontrado);
         $entityManager->flush();
 
         return $this->json([],200);

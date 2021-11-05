@@ -34,7 +34,7 @@ class Usuario
     private $privilegio;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Pergunta", mappedBy="usuario")
+     * @ORM\OneToMany(targetEntity="App\Entity\Pergunta", mappedBy="usuario", cascade={"remove"})
      */
     private $perguntas;
 

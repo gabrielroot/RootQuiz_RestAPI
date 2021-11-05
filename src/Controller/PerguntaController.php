@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Pergunta;
 use App\Entity\Resposta;
 use App\Entity\Usuario;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,16 +64,17 @@ class PerguntaController extends AbstractController
         $pergunta->setRespostaCorreta($body['respostaCorreta']);
         $pergunta->setUsuario($usuarioEncontrado);
 
-        $entityManager->persist($pergunta);
-        $entityManager->flush();
-
+        $respostas = new ArrayCollection();
         for($i=0; $i < sizeof($body['respostas']); $i++){
             $resposta = new Resposta();
             $resposta->setAlternativa($body['respostas'][$i]);
             $resposta->setPergunta($pergunta);
-            $entityManager->persist($resposta);
-            $entityManager->flush();
+            $respostas[] = $resposta;
         }
+        $pergunta->setRespostas($respostas);
+
+        $entityManager->persist($pergunta);
+        $entityManager->flush();
 
         return $this->json([],201);
     }
