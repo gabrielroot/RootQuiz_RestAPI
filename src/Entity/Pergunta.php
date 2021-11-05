@@ -20,9 +20,9 @@ class Pergunta
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255, options={"default":"Nenhuma"})
      */
-    private $respostaCorretaId;
+    private $respostaCorreta;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -60,11 +60,11 @@ class Pergunta
     /**
      * @return mixed
      */
-    public function getRespostaCorretaId() {  return $this->respostaCorretaId; }
+    public function getRespostaCorreta() {  return $this->respostaCorreta; }
     /**
-     * @param mixed $respostaCorretaId
+     * @param mixed $respostaCorreta
      */
-    public function setRespostaCorretaId($respostaCorretaId): void { $this->respostaCorretaId = $respostaCorretaId; }
+    public function setRespostaCorreta($respostaCorreta): void { $this->respostaCorreta = $respostaCorreta; }
 
     /**
      * @return ArrayCollection

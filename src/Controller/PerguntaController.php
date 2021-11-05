@@ -35,7 +35,7 @@ class PerguntaController extends AbstractController
             }
             $perguntas[] = array(
               'id'=>$item->getId(),
-              'respostaCorreta_id'=>$item->getRespostaCorretaId(),
+              'respostaCorreta'=>$item->getRespostaCorreta(),
               'questao'=>$item->getQuestao(),
                 'Respostas'=>$respostas
             );
@@ -48,15 +48,10 @@ class PerguntaController extends AbstractController
      * @Route("/pergunta", name="save", methods="POST")
      */
     public function save(Request $request): Response{
-        $respostaRepository = $this->getDoctrine()->getRepository(Resposta::class);
         $usuarioRepository = $this->getDoctrine()->getRepository(Usuario::class);
 
         $body =  $request->toArray();
         $entityManager = $this->getDoctrine()->getManager();
-
-        if(is_null($respostaRepository->find($body['respostaCorretaId']))){
-            return $this->json(["Erro"=>'Resposta não encontrada']);
-        }
 
         $usuarioEncontrado = $usuarioRepository->find($body['usuario']);
         if(is_null($usuarioEncontrado)){
@@ -65,11 +60,19 @@ class PerguntaController extends AbstractController
 
         $pergunta = new Pergunta();
         $pergunta->setQuestao($body['questao']);
-        $pergunta->setRespostaCorretaId($body['respostaCorretaId']);
+        $pergunta->setRespostaCorreta($body['respostaCorreta']);
         $pergunta->setUsuario($usuarioEncontrado);
 
         $entityManager->persist($pergunta);
         $entityManager->flush();
+
+        for($i=0; $i < sizeof($body['respostas']); $i++){
+            $resposta = new Resposta();
+            $resposta->setAlternativa($body['respostas'][$i]);
+            $resposta->setPergunta($pergunta);
+            $entityManager->persist($resposta);
+            $entityManager->flush();
+        }
 
         return $this->json(["Sucess"=>"OK"]);
     }
@@ -78,7 +81,6 @@ class PerguntaController extends AbstractController
      * @Route("/pergunta/{id}", name="update", methods="PUT")
      */
     public function update(Request $request, int $id): Response{
-        $respostaRepository = $this->getDoctrine()->getRepository(Resposta::class);
         $usuarioRepository = $this->getDoctrine()->getRepository(Usuario::class);
         $perguntaRepository = $this->getDoctrine()->getRepository(Pergunta::class);
 
@@ -90,17 +92,13 @@ class PerguntaController extends AbstractController
             return $this->json(["Erro"=>'Pergunta não encontrada']);
         }
 
-        if(is_null($respostaRepository->find($body['respostaCorretaId']))){
-            return $this->json(["Erro"=>'Resposta não encontrada']);
-        }
-
         $usuarioEncontrado = $usuarioRepository->find($body['usuario']);
         if(is_null($usuarioEncontrado)){
             return $this->json(["Erro"=>'Usuário não encontrado']);
         }
 
         $perguntaEncontrada->setQuestao($body['questao']);
-        $perguntaEncontrada->setRespostaCorretaId($body['respostaCorretaId']);
+        $perguntaEncontrada->setRespostaCorreta($body['respostaCorreta']);
         $perguntaEncontrada->setUsuario($usuarioEncontrado);
 
         $entityManager->persist($perguntaEncontrada);
@@ -112,8 +110,7 @@ class PerguntaController extends AbstractController
     /**
      * @Route("/pergunta/{id}", name="delete", methods="DELETE")
      */
-    public function delete(Request $request, int $id): Response{
-        $respostaRepository = $this->getDoctrine()->getRepository(Resposta::class);
+    public function delete(int $id): Response{
         $perguntaRepository = $this->getDoctrine()->getRepository(Pergunta::class);
 
         $entityManager = $this->getDoctrine()->getManager();
