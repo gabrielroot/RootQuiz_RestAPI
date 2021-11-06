@@ -24,13 +24,12 @@ class PerguntaController extends AbstractController
 
         $perguntas = array();
         foreach ($query as $item){
-            $alternativas = array('A','B','C','D','E','F','G');
             $respostas = array();
             $i = 0;
             foreach ($item->getRespostas() as $valor){
                 $respostas[] = [
                     'id'=> $valor->getId(),
-                    'alternativa'.$alternativas[$i]=> $valor->getAlternativa()
+                    'alternativa'=> $valor->getAlternativa()
                 ];
                 $i++;
             }
@@ -42,7 +41,67 @@ class PerguntaController extends AbstractController
             );
         }
 
-        return $this->json($perguntas);
+        return $this->json($perguntas, 200);
+    }
+
+    /**
+     * @Route("/pergunta/aleatoria", name="perguntaAleatoria", methods="GET")
+     */
+    public function perguntaAleatoria(): Response{
+        $query = $this->getDoctrine()
+            ->getRepository(Pergunta::class)
+            ->getPerguntasRespostas();
+
+        $perguntaSelecionada = $query[rand(0,sizeof($query)-1)];
+
+        $respostas = array();
+        $i = 0;
+        foreach ($perguntaSelecionada->getRespostas() as $valor){
+            $respostas[] = [
+                'id'=> $valor->getId(),
+                'alternativa'=> $valor->getAlternativa()
+            ];
+            $i++;
+        }
+        $pergunta = array(
+            'id'=>$perguntaSelecionada->getId(),
+            'respostaCorreta'=>$perguntaSelecionada->getRespostaCorreta(),
+            'questao'=>$perguntaSelecionada->getQuestao(),
+            'Respostas'=>$respostas
+        );
+
+        return $this->json($pergunta, 200);
+    }
+
+    /**
+     * @Route("/pergunta/{id}", name="findPergunta", methods="GET")
+     */
+    public function find($id): Response{
+        $pergunta = $this->getDoctrine()
+                ->getRepository(Pergunta::class)
+                ->find($id);
+
+        if(is_null($pergunta)){
+            return $this->json(["Erro"=>'Pergunta não encontrada']);
+        }
+
+        $respostas = array();
+        $i = 0;
+        foreach ($pergunta->getRespostas() as $valor){
+            $respostas[] = [
+                'id'=> $valor->getId(),
+                'alternativa'=> $valor->getAlternativa()
+            ];
+            $i++;
+        }
+        $pergunta = array(
+            'id'=>$pergunta->getId(),
+            'respostaCorreta'=>$pergunta->getRespostaCorreta(),
+            'questao'=>$pergunta->getQuestao(),
+            'Respostas'=>$respostas
+        );
+
+        return $this->json($pergunta,200);
     }
 
     /**

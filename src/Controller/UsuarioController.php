@@ -30,6 +30,50 @@ class UsuarioController extends AbstractController
     }
 
     /**
+     * @Route("/usuario/{id}", name="findUsuario", methods="GET")
+     */
+    public function find($id): Response{
+        $usuario = $this->getDoctrine()
+            ->getRepository(Usuario::class)
+            ->find($id);
+
+        if(is_null($usuario)){
+            return $this->json(["Erro"=>'Usuario não encontrado']);
+        }
+
+        $tentativas = array();
+        $i = 0;
+        foreach ($usuario->getTentativas() as $valor){
+            $tentativas[] = [
+                'id'=> $valor->getId(),
+                'status'=> $valor->getErroAcerto(),
+                'pergunta_id'=> $valor->getPergunta()->getId()
+            ];
+            $i++;
+        }
+
+        $perguntas = array();
+        $i = 0;
+        foreach ($usuario->getPerguntas() as $valor){
+            $perguntas[] = [
+                'id'=> $valor->getId(),
+                'questao'=> $valor->getQuestao()
+            ];
+            $i++;
+        }
+        $usuario = array(
+            'id'=>$usuario->getId(),
+            'nome'=>$usuario->getNome(),
+            'privilegio'=>$usuario->getPrivilegio(),
+            'perguntas'=>$perguntas,
+            'tentativas'=>$tentativas
+        );
+
+        return $this->json($usuario,200);
+    }
+
+
+    /**
      * @Route("/usuario", name="saveUsuario", methods="POST")
      */
     public function save(Request $request): Response{

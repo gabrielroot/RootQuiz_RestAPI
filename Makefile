@@ -1,5 +1,5 @@
 project:
-	symfony server:start
+	symfony server:start --port=8000
 
 db:
 	docker-compose up -d

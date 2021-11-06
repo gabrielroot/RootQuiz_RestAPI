@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\UsuarioRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity(repositoryClass=UsuarioRepository::class)
@@ -45,8 +46,8 @@ class Usuario
 
     public function __construct()
     {
-        $this->perguntas = new ArrayCollection();
-        $this->tentativas = new ArrayCollection();
+        $this->perguntas = new PersistentCollection();
+        $this->tentativas = new PersistentCollection();
     }
 
     public function getId(): ?int { return $this->id; }
@@ -61,18 +62,18 @@ class Usuario
     public function setPrivilegio(int $privilegio): self { $this->privilegio = $privilegio; return $this; }
 
     /**
-     * @return ArrayCollection
+     * @return PersistentCollection
      */
-    public function getPerguntas(): ArrayCollection { return $this->perguntas; }
+    public function getPerguntas(): PersistentCollection { return $this->perguntas; }
     /**
      * @param ArrayCollection $perguntas
      */
     public function setPerguntas(ArrayCollection $perguntas): void { $this->perguntas = $perguntas; }
 
     /**
-     * @return ArrayCollection
+     * @return PersistentCollection
      */
-    public function getTentativas(): ArrayCollection { return $this->tentativas; }
+    public function getTentativas(): PersistentCollection { return $this->tentativas; }
     /**
      * @param ArrayCollection $tentativas
      */
