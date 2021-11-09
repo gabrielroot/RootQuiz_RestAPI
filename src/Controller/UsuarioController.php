@@ -47,7 +47,10 @@ class UsuarioController extends AbstractController
             $tentativas[] = [
                 'id'=> $valor->getId(),
                 'status'=> $valor->getErroAcerto(),
-                'pergunta_id'=> $valor->getPergunta()->getId()
+                'pergunta'=>[
+                    'id'=> $valor->getPergunta()->getId(),
+                    'questao'=>$valor->getPergunta()->getQuestao()
+                ]
             ];
             $i++;
         }

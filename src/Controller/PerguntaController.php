@@ -37,7 +37,8 @@ class PerguntaController extends AbstractController
               'id'=>$item->getId(),
               'respostaCorreta'=>$item->getRespostaCorreta(),
               'questao'=>$item->getQuestao(),
-                'Respostas'=>$respostas
+                'criadaPor'=>$item->getUsuario()->getId(),
+                'respostas'=>$respostas
             );
         }
 
@@ -67,7 +68,8 @@ class PerguntaController extends AbstractController
             'id'=>$perguntaSelecionada->getId(),
             'respostaCorreta'=>$perguntaSelecionada->getRespostaCorreta(),
             'questao'=>$perguntaSelecionada->getQuestao(),
-            'Respostas'=>$respostas
+            'criadaPor'=>$perguntaSelecionada->getUsuario()->getId(),
+            'respostas'=>$respostas
         );
 
         return $this->json($pergunta, 200);
@@ -124,11 +126,11 @@ class PerguntaController extends AbstractController
         $pergunta->setUsuario($usuarioEncontrado);
 
         $respostas = new ArrayCollection();
-        for($i=0; $i < sizeof($body['respostas']); $i++){
+        foreach ($body['respostas'] as $item){
             $resposta = new Resposta();
-            $resposta->setAlternativa($body['respostas'][$i]);
             $resposta->setPergunta($pergunta);
-            $respostas[] = $resposta;
+            $resposta->setAlternativa($item['alternativa']);
+            $respostas->add($resposta);
         }
         $pergunta->setRespostas($respostas);
 

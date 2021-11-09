@@ -40,7 +40,7 @@ class Pergunta
     private $usuario;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tentativa", mappedBy="pergunta")
+     * @ORM\OneToMany(targetEntity="App\Entity\Tentativa", mappedBy="pergunta", cascade={"remove"})
      */
     private $tentativas;
 
