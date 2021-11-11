@@ -37,7 +37,7 @@ class PerguntaController extends AbstractController
               'id'=>$item->getId(),
               'respostaCorreta'=>$item->getRespostaCorreta(),
               'questao'=>$item->getQuestao(),
-                'criadaPor'=>$item->getUsuario()->getId(),
+                'criadaPor'=>$item->getUsuario()?$item->getUsuario()->getId():null,
                 'respostas'=>$respostas
             );
         }
@@ -68,7 +68,7 @@ class PerguntaController extends AbstractController
             'id'=>$perguntaSelecionada->getId(),
             'respostaCorreta'=>$perguntaSelecionada->getRespostaCorreta(),
             'questao'=>$perguntaSelecionada->getQuestao(),
-            'criadaPor'=>$perguntaSelecionada->getUsuario()->getId(),
+            'criadaPor'=>$perguntaSelecionada->getUsuario()?$perguntaSelecionada->getUsuario()->getId():null,
             'respostas'=>$respostas
         );
 
@@ -203,6 +203,10 @@ class PerguntaController extends AbstractController
         $perguntaEncontrada = $perguntaRepository->find($id);
         if(is_null($perguntaEncontrada)){
             return $this->json(["Erro"=>'Pergunta não encontrada']);
+        }
+
+        foreach ($perguntaEncontrada->getTentativas() as $tentativa){
+            $tentativa->setPergunta(null);
         }
 
         $entityManager->remove($perguntaEncontrada);

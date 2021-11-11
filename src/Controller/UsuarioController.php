@@ -21,6 +21,7 @@ class UsuarioController extends AbstractController
         $usuarios = [];
         foreach ($query as $item){
             $usuarios[] = [
+              'id'=> $item->getId(),
               'nome'=> $item->getNome(),
               'privilegio'=> $item->getPrivilegio(),
             ];
@@ -47,12 +48,11 @@ class UsuarioController extends AbstractController
             $tentativas[] = [
                 'id'=> $valor->getId(),
                 'status'=> $valor->getErroAcerto(),
-                'pergunta'=>[
+                'pergunta'=>$valor->getPergunta()?[
                     'id'=> $valor->getPergunta()->getId(),
-                    'questao'=>$valor->getPergunta()->getQuestao()
-                ]
+                    'questao'=> $valor->getPergunta()->getQuestao()
+                ]:null
             ];
-            $i++;
         }
 
         $perguntas = array();
@@ -71,7 +71,6 @@ class UsuarioController extends AbstractController
             'perguntas'=>$perguntas,
             'tentativas'=>$tentativas
         );
-
         return $this->json($usuario,200);
     }
 
@@ -83,10 +82,7 @@ class UsuarioController extends AbstractController
         $body =  $request->toArray();
         $entityManager = $this->getDoctrine()->getManager();
 
-        $usuario = new Usuario();
-        $usuario->setNome($body['nome']);
-        $usuario->setPrivilegio($body['privilegio']);
-        $usuario->setSenha($body['senha']);
+        $usuario = new Usuario($body['nome'], $body['privilegio'], $body['senha']);
 
         $entityManager->persist($usuario);
         $entityManager->flush();
@@ -134,6 +130,10 @@ class UsuarioController extends AbstractController
         $usuarioEncontrado = $usuarioRepository->find($id);
         if(is_null($usuarioEncontrado)){
             return $this->json(["Erro"=>'Usuario não encontrado']);
+        }
+
+        foreach ($usuarioEncontrado->getPerguntas() as $pergunta){
+            $pergunta->setUsuario(null);
         }
 
         $entityManager->remove($usuarioEncontrado);

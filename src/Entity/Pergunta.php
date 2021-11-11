@@ -40,7 +40,7 @@ class Pergunta
     private $usuario;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tentativa", mappedBy="pergunta", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Tentativa", mappedBy="pergunta")
      */
     private $tentativas;
 
@@ -87,7 +87,7 @@ class Pergunta
     /**
      * @return ArrayCollection
      */
-    public function getTentativas(): ArrayCollection { return $this->tentativas; }
+    public function getTentativas(): PersistentCollection { return $this->tentativas; }
     /**
      * @param ArrayCollection $tentativas
      */

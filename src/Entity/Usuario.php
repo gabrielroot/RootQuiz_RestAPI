@@ -35,19 +35,22 @@ class Usuario
     private $privilegio;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Pergunta", mappedBy="usuario", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity="App\Entity\Pergunta", mappedBy="usuario")
      */
     private $perguntas;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Tentativa", mappedBy="usuario")
+     * @ORM\OneToMany(targetEntity="App\Entity\Tentativa", mappedBy="usuario", cascade={"remove"})
      */
     private $tentativas;
 
-    public function __construct()
+    public function __construct($nome, $privilegio, $senha)
     {
-        $this->perguntas = new PersistentCollection();
-        $this->tentativas = new PersistentCollection();
+        $this->nome = $nome;
+        $this->privilegio = $privilegio;
+        $this->senha = $senha;
+        $this->perguntas = new ArrayCollection();
+        $this->tentativas = new ArrayCollection();
     }
 
     public function getId(): ?int { return $this->id; }
@@ -62,7 +65,7 @@ class Usuario
     public function setPrivilegio(int $privilegio): self { $this->privilegio = $privilegio; return $this; }
 
     /**
-     * @return PersistentCollection
+     * @return ArrayCollection
      */
     public function getPerguntas(): PersistentCollection { return $this->perguntas; }
     /**
@@ -71,7 +74,7 @@ class Usuario
     public function setPerguntas(ArrayCollection $perguntas): void { $this->perguntas = $perguntas; }
 
     /**
-     * @return PersistentCollection
+     * @return ArrayCollection
      */
     public function getTentativas(): PersistentCollection { return $this->tentativas; }
     /**
