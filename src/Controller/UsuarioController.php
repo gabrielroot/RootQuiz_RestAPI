@@ -6,12 +6,14 @@ use App\Entity\Usuario;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class UsuarioController extends AbstractController
 {
     /**
-     * @Route("/usuarios", name="indexUsuario", methods="GET")
+     * @Route("/usuario", name="indexUsuario", methods="GET")
      */
     public function index(): Response{
         $query = $this->getDoctrine()->
@@ -23,11 +25,32 @@ class UsuarioController extends AbstractController
             $usuarios[] = [
               'id'=> $item->getId(),
               'nome'=> $item->getNome(),
-              'privilegio'=> $item->getPrivilegio(),
+              'username'=> $item->getUsername(),
+              'papeis'=> $item->getRoles(),
             ];
         }
 
         return $this->json($usuarios);
+    }
+
+    /**
+     * @Route("/usuario/login", name="api_login", methods="POST")
+     */
+    public function login(#[CurrentUser] ?Usuario $user): Response{
+        if (null === $user) {
+            return $this->json([
+                'message' => 'missing credentials',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        return $this->json([
+            'user'  => $user->getUserIdentifier()
+        ]);
+    }
+    /**
+     * @Route("/usuario/logout", name="app_logout", methods="GET")
+     */
+    public function logout(): void{
     }
 
     /**
@@ -43,7 +66,6 @@ class UsuarioController extends AbstractController
         }
 
         $tentativas = array();
-        $i = 0;
         foreach ($usuario->getTentativas() as $valor){
             $tentativas[] = [
                 'id'=> $valor->getId(),
@@ -56,35 +78,42 @@ class UsuarioController extends AbstractController
         }
 
         $perguntas = array();
-        $i = 0;
         foreach ($usuario->getPerguntas() as $valor){
             $perguntas[] = [
                 'id'=> $valor->getId(),
                 'questao'=> $valor->getQuestao()
             ];
-            $i++;
         }
         $usuario = array(
             'id'=>$usuario->getId(),
             'nome'=>$usuario->getNome(),
-            'privilegio'=>$usuario->getPrivilegio(),
+            'username'=>$usuario->getUserName(),
             'perguntas'=>$perguntas,
             'tentativas'=>$tentativas
         );
         return $this->json($usuario,200);
     }
 
-
     /**
      * @Route("/usuario", name="saveUsuario", methods="POST")
      */
-    public function save(Request $request): Response{
+    public function save(Request $request, UserPasswordHasherInterface $passwordHasher): Response{
         $body =  $request->toArray();
         $entityManager = $this->getDoctrine()->getManager();
 
-        $usuario = new Usuario($body['nome'], $body['privilegio'], $body['senha']);
+        $user = new Usuario();
+        $user->setUsername($body['username']);
+        $user->setPassword($body['password']);
+        $user->setNome($body['nome']);
+        $user->setRoles($body['roles']);
 
-        $entityManager->persist($usuario);
+        $hashedPassword = $passwordHasher->hashPassword(
+            $user,
+            $user->getPassword()
+        );
+        $user->setPassword($hashedPassword);
+
+        $entityManager->persist($user);
         $entityManager->flush();
 
         return $this->json([],201);
@@ -93,7 +122,7 @@ class UsuarioController extends AbstractController
     /**
      * @Route("/usuario/{id}", name="updateUsuario", methods="PUT")
      */
-    public function update(Request $request, int $id): Response
+    public function update(Request $request, int $id, UserPasswordHasherInterface $passwordHasher): Response
     {
         $usuarioRepository = $this->getDoctrine()->getRepository(Usuario::class);
 
@@ -102,16 +131,23 @@ class UsuarioController extends AbstractController
 
         $usuarioEncontrado = $usuarioRepository->find($id);
         if(is_null($usuarioEncontrado))
-            return $this->json([]);
+            return $this->json(["Erro"=>'Usuario não encontrado'],404);
 
         if(key_exists('nome', $body))
             $usuarioEncontrado->setNome($body['nome']);
 
-        if(key_exists('privilegio', $body))
-            $usuarioEncontrado->setPrivilegio($body['privilegio']);
+        if(key_exists('username', $body))
+            $usuarioEncontrado->setUsername($body['username']);
 
-        if(key_exists('senha', $body))
-            $usuarioEncontrado->setSenha($body['senha']);
+        if(key_exists('password', $body)){
+            $usuarioEncontrado->setPassword($body['password']);
+            $hashedPassword = $passwordHasher->hashPassword(
+                $usuarioEncontrado,
+                $usuarioEncontrado->getPassword()
+            );
+            $usuarioEncontrado->setPassword($hashedPassword);
+        }
+
 
         $entityManager->persist($usuarioEncontrado);
         $entityManager->flush();
@@ -129,7 +165,7 @@ class UsuarioController extends AbstractController
 
         $usuarioEncontrado = $usuarioRepository->find($id);
         if(is_null($usuarioEncontrado)){
-            return $this->json(["Erro"=>'Usuario não encontrado']);
+            return $this->json(["Erro"=>'Usuario não encontrado'],404);
         }
 
         foreach ($usuarioEncontrado->getPerguntas() as $pergunta){

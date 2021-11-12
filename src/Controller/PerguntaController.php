@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PerguntaController extends AbstractController
 {
     /**
-     * @Route("/perguntas", name="indexPergunta", methods="GET")
+     * @Route("/pergunta", name="indexPergunta", methods="GET")
      */
     public function index(): Response{
         $query = $this->getDoctrine()
@@ -117,7 +117,7 @@ class PerguntaController extends AbstractController
 
         $usuarioEncontrado = $usuarioRepository->find($body['usuario']);
         if(is_null($usuarioEncontrado)){
-            return $this->json(["Erro"=>'Usuário não encontrado']);
+            return $this->json(["Erro"=>'Usuário não encontrado'],404);
         }
 
         $pergunta = new Pergunta();
@@ -153,13 +153,13 @@ class PerguntaController extends AbstractController
 
         $perguntaEncontrada = $perguntaRepository->find($id);
         if(is_null($perguntaEncontrada)){
-            return $this->json(["Erro"=>'Pergunta não encontrada']);
+            return $this->json(["Erro"=>'Pergunta não encontrada'], 404);
         }
 
         if(key_exists('usuario', $body)) {
             $usuarioEncontrado = $usuarioRepository->find($body['usuario']);
             if (is_null($usuarioEncontrado)) {
-                return $this->json(["Erro" => 'Usuário não encontrado']);
+                return $this->json(["Erro" => 'Usuário não encontrado'], 404);
             }
 
             $perguntaEncontrada->setUsuario($usuarioEncontrado);
@@ -202,7 +202,7 @@ class PerguntaController extends AbstractController
 
         $perguntaEncontrada = $perguntaRepository->find($id);
         if(is_null($perguntaEncontrada)){
-            return $this->json(["Erro"=>'Pergunta não encontrada']);
+            return $this->json(["Erro"=>'Pergunta não encontrada'], 404);
         }
 
         foreach ($perguntaEncontrada->getTentativas() as $tentativa){

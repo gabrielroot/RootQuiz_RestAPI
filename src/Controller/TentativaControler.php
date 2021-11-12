@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class TentativaControler extends AbstractController
 {
     /**
-     * @Route("/tentativas", name="indexTentativa", methods="GET")
+     * @Route("/tentativa", name="indexTentativa", methods="GET")
      */
     public function index(): Response{
         $query = $this->getDoctrine()->
@@ -55,13 +55,13 @@ class TentativaControler extends AbstractController
 
         $usuarioEncontrado = $usuarioRepository->find($body['usuario_id']);
         if(is_null($usuarioEncontrado))
-            return $this->json(['Erro'=>'Usuário não encontrado']);
+            return $this->json(['Erro'=>'Usuário não encontrado'], 404);
 
         $tentativa->setUsuario($usuarioEncontrado);
 
         $perguntaEncontrada = $perguntaRepository->find($body['pergunta_id']);
         if(is_null($perguntaEncontrada))
-            return $this->json(['Erro'=>'Pergunta não encontrado']);
+            return $this->json(['Erro'=>'Pergunta não encontrado'], 404);
 
         $tentativa->setPergunta($perguntaEncontrada);
 

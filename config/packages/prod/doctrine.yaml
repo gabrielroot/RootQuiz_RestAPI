@@ -12,6 +12,6 @@ framework:
     cache:
         pools:
             doctrine.result_cache_pool:
-                adapter: cache__ToDELETE.app
+                adapter: cache.app
             doctrine.system_cache_pool:
-                adapter: cache__ToDELETE.system
+                adapter: cache.system

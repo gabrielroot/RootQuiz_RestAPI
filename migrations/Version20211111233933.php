@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20211105140410 extends AbstractMigration
+final class Version20211111233933 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -27,10 +27,12 @@ final class Version20211105140410 extends AbstractMigration
         $this->addSql('CREATE TABLE tentativa (id INT NOT NULL, usuario_id INT DEFAULT NULL, pergunta_id INT DEFAULT NULL, erro_acerto BOOLEAN NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_DCAE46E0DB38439E ON tentativa (usuario_id)');
         $this->addSql('CREATE INDEX IDX_DCAE46E03C763537 ON tentativa (pergunta_id)');
-        $this->addSql('CREATE TABLE usuario (id INT NOT NULL, nome VARCHAR(255) NOT NULL, senha VARCHAR(255) NOT NULL, privilegio INT NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE usuario (id INT NOT NULL, username VARCHAR(180) NOT NULL, roles JSON NOT NULL, password VARCHAR(255) NOT NULL, nome VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_2265B05DF85E0677 ON usuario (username)');
+        $this->addSql('CREATE TABLE usuarioold (id INT NOT NULL, nome VARCHAR(255) NOT NULL, senha VARCHAR(255) NOT NULL, privilegio INT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('ALTER TABLE pergunta ADD CONSTRAINT FK_124A7194DB38439E FOREIGN KEY (usuario_id) REFERENCES usuario (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE resposta ADD CONSTRAINT FK_62A969063C763537 FOREIGN KEY (pergunta_id) REFERENCES pergunta (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
-        $this->addSql('ALTER TABLE tentativa ADD CONSTRAINT FK_DCAE46E0DB38439E FOREIGN KEY (usuario_id) REFERENCES usuario (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE tentativa ADD CONSTRAINT FK_DCAE46E0DB38439E FOREIGN KEY (usuario_id) REFERENCES usuarioold (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE tentativa ADD CONSTRAINT FK_DCAE46E03C763537 FOREIGN KEY (pergunta_id) REFERENCES pergunta (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
     }
 
@@ -46,5 +48,6 @@ final class Version20211105140410 extends AbstractMigration
         $this->addSql('DROP TABLE resposta');
         $this->addSql('DROP TABLE tentativa');
         $this->addSql('DROP TABLE usuario');
+        $this->addSql('DROP TABLE usuarioold');
     }
 }

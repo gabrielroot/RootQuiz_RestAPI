@@ -19,7 +19,7 @@ class RespostaController extends AbstractController
 
         $respostaEncontrada = $respostaRepository->find($id);
         if(is_null($respostaEncontrada)){
-            return $this->json(["Erro"=>'Resposta não encontrada']);
+            return $this->json(["Erro"=>'Resposta não encontrada'], 404);
         }
 
         $entityManager->remove($respostaEncontrada);

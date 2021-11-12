@@ -2,15 +2,17 @@
 
 namespace App\Entity;
 
-use App\Repository\UsuarioRepository;
+use App\Repository\UsuariosRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity(repositoryClass=UsuarioRepository::class)
+ * @ORM\Entity(repositoryClass=UsuariosRepository::class)
  */
-class Usuario
+class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -20,19 +22,26 @@ class Usuario
     private $id;
 
     /**
+     * @ORM\Column(type="string", length=180, unique=true)
+     */
+    private $username;
+
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     */
+    private $password;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $nome;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $senha;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $privilegio;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Pergunta", mappedBy="usuario")
@@ -44,25 +53,95 @@ class Usuario
      */
     private $tentativas;
 
-    public function __construct($nome, $privilegio, $senha)
+    public function getId(): ?int
     {
-        $this->nome = $nome;
-        $this->privilegio = $privilegio;
-        $this->senha = $senha;
-        $this->perguntas = new ArrayCollection();
-        $this->tentativas = new ArrayCollection();
+        return $this->id;
     }
 
-    public function getId(): ?int { return $this->id; }
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
 
-    public function getNome(): ?string { return $this->nome; }
-    public function setNome(string $nome): self { $this->nome = $nome; return $this; }
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
 
-    public function getSenha(): ?string { return $this->senha; }
-    public function setSenha(string $senha): self { $this->senha = $senha; return $this; }
+        return $this;
+    }
 
-    public function getPrivilegio(): ?int { return $this->privilegio; }
-    public function setPrivilegio(int $privilegio): self { $this->privilegio = $privilegio; return $this; }
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->username;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
+    public function getNome(): ?string
+    {
+        return $this->nome;
+    }
+
+    public function setNome(string $nome): self
+    {
+        $this->nome = $nome;
+
+        return $this;
+    }
 
     /**
      * @return ArrayCollection
