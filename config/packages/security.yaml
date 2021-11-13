@@ -42,6 +42,6 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: '^/usuario/(login|logout)', roles: PUBLIC_ACCESS }
-         - { path: '^/(tentativa|resposta|usuario)/\d+$', roles: ROLE_ADMIN }
+         - { path: '^/(tentativa|resposta)/\d+$', roles: ROLE_ADMIN }
          - { path: '^/pergunta/aleatoria', roles: ROLE_USER }
          - { path: '^/(usuario|pergunta|tentativa)', roles: ROLE_USER }

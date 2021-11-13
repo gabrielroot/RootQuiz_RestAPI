@@ -84,7 +84,7 @@ class PerguntaController extends AbstractController
                 ->find($id);
 
         if(is_null($pergunta)){
-            return $this->json(["Erro"=>'Pergunta não encontrada']);
+            return $this->json(["Erro"=>'Pergunta não encontrada'], 404);
         }
 
         $respostas = array();
@@ -115,9 +115,9 @@ class PerguntaController extends AbstractController
         $body =  $request->toArray();
         $entityManager = $this->getDoctrine()->getManager();
 
-        $usuarioEncontrado = $usuarioRepository->find($body['usuario']);
+        $usuarioEncontrado = $usuarioRepository->findOneBy(['username'=>$this->getUser()->getUserIdentifier()]);
         if(is_null($usuarioEncontrado)){
-            return $this->json(["Erro"=>'Usuário não encontrado'],404);
+            return $this->json(["Erro"=>'Usuário não logado'],401);
         }
 
         $pergunta = new Pergunta();

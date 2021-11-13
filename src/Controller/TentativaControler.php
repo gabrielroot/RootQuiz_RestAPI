@@ -53,9 +53,10 @@ class TentativaControler extends AbstractController
         $tentativa = new Tentativa();
         $tentativa->setErroAcerto($body['status']);
 
-        $usuarioEncontrado = $usuarioRepository->find($body['usuario_id']);
-        if(is_null($usuarioEncontrado))
-            return $this->json(['Erro'=>'Usuário não encontrado'], 404);
+        $usuarioEncontrado = $usuarioRepository->findOneBy(['username'=>$this->getUser()->getUserIdentifier()]);
+        if(is_null($usuarioEncontrado)){
+            return $this->json(["Erro"=>'Usuário não logado'],401);
+        }
 
         $tentativa->setUsuario($usuarioEncontrado);
 

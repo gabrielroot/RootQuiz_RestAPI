@@ -26,7 +26,7 @@ class UsuarioController extends AbstractController
               'id'=> $item->getId(),
               'nome'=> $item->getNome(),
               'username'=> $item->getUsername(),
-              'papeis'=> $item->getRoles(),
+              'roles'=> $item->getRoles(),
             ];
         }
 
@@ -43,14 +43,20 @@ class UsuarioController extends AbstractController
             ], Response::HTTP_UNAUTHORIZED);
         }
 
+        $usuarioRepository = $this->getDoctrine()->getRepository(Usuario::class);
+        $usuarioEncontrado = $usuarioRepository->findOneBy(['username'=>$user->getUserIdentifier()]);
+
         return $this->json([
-            'user'  => $user->getUserIdentifier()
+            'id'  => $usuarioEncontrado->getId(),
+            'nome' => $usuarioEncontrado->getNome(),
+            'role' => $usuarioEncontrado->getRoles()[0]
         ]);
     }
     /**
      * @Route("/usuario/logout", name="app_logout", methods="GET")
      */
-    public function logout(): void{
+    public function logout(): Response{
+        return $this->json([], 200);
     }
 
     /**
@@ -138,6 +144,9 @@ class UsuarioController extends AbstractController
 
         if(key_exists('username', $body))
             $usuarioEncontrado->setUsername($body['username']);
+
+        if(key_exists('roles', $body))
+            $usuarioEncontrado->setRoles($body['roles']);
 
         if(key_exists('password', $body)){
             $usuarioEncontrado->setPassword($body['password']);
