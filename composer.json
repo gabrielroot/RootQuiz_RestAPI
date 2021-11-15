@@ -2,10 +2,6 @@
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
-    "compile": [
-        "bin/console doctrine:database:create --if-not-exists",
-        "bin/console doctrine:schema:update -f"
-    ],
     "prefer-stable": true,
     "require": {
         "php": ">=8.0",
@@ -59,6 +55,10 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "compile": [
+            "bin/console doctrine:database:create --if-not-exists",
+            "bin/console doctrine:schema:update -f"
         ]
     },
     "conflict": {
