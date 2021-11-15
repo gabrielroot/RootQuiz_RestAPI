@@ -4,7 +4,7 @@ use App\Kernel;
 
 require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 
-header('Access-Control-Allow-Origin: https://quizroot.herokuapp.com/');
+header('Access-Control-Allow-Origin: https://quizroot.herokuapp.com');
 header('Access-Control-Allow-Credentials: true');
 header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Access-Control-Allow-Headers, Authorization");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
