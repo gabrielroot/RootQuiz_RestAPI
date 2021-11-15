@@ -56,7 +56,7 @@ class UsuarioController extends AbstractController
      * @Route("/usuario/logout", name="app_logout", methods="GET")
      */
     public function logout(): Response{
-        return $this->json([], 200);
+        return $this->json(["Info": 'Deslogado.'], 200);
     }
 
     /**
