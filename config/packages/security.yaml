@@ -41,7 +41,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-         - { path: '^/usuario/(login|logout)', roles: PUBLIC_ACCESS }
+         - { path: '^/usuario/(login|logout|signup)', roles: PUBLIC_ACCESS }
          - { path: '^/(tentativa|resposta)/\d+$', roles: ROLE_ADMIN }
          - { path: '^/pergunta/aleatoria', roles: ROLE_USER }
          - { path: '^/(usuario|pergunta|tentativa)', roles: ROLE_USER }

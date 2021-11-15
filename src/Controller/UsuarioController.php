@@ -124,6 +124,38 @@ class UsuarioController extends AbstractController
 
         return $this->json([],201);
     }
+    /**
+     * @Route("/usuario/signup", name="signup", methods="POST")
+     */
+    public function registrar(Request $request, UserPasswordHasherInterface $passwordHasher): Response{
+        $body =  $request->toArray();
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $usuario = $this->getDoctrine()
+            ->getRepository(Usuario::class)
+            ->findOneBy(['username'=>$body['username']]);
+
+        if(!is_null($usuario)){
+            return $this->json([],409);
+        }
+
+        $user = new Usuario();
+        $user->setUsername($body['username']);
+        $user->setPassword($body['password']);
+        $user->setNome($body['nome']);
+        $user->setRoles(['ROLE_USER']);
+
+        $hashedPassword = $passwordHasher->hashPassword(
+            $user,
+            $user->getPassword()
+        );
+        $user->setPassword($hashedPassword);
+
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        return $this->json([],201);
+    }
 
     /**
      * @Route("/usuario/{id}", name="updateUsuario", methods="PUT")
