@@ -8,8 +8,8 @@ require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
 header('Access-Control-Allow-Origin: https://www.main-bvxea6i-6dmvizzvxzmvi.us-3.platformsh.site');
 header('Access-Control-Allow-Credentials: true');
 header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Access-Control-Allow-Headers, Authorization");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
-header("Allow: GET, POST, OPTIONS, PUT, DELETE");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE");
+header("Allow: GET, POST, PUT, DELETE");
 $method = $_SERVER['REQUEST_METHOD'];
 if ($method == "OPTIONS") {
     die();
