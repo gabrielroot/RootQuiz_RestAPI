@@ -24,7 +24,7 @@ class UsuarioController extends AbstractController
      */
     public function __construct(TokenStorageInterface $tokenStorage)
     {
-        $this->currentUser = $tokenStorage->getToken()->getUser();
+        $this->currentUser = $tokenStorage->getToken()?$tokenStorage->getToken()->getUser():null;
     }
 
     /**
