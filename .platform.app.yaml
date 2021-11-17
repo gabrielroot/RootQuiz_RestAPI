@@ -19,6 +19,7 @@ variables:
         # Tell Symfony to always install in production-mode.
         APP_ENV: 'prod'
         APP_DEBUG: 0
+        DATABASE_URL: 'postgres://lyaejfbrzckqvy:e8b50e1ce4d3177d4c2fe58aea54d7a088a5363304ce31a03b18295bd2f3f28f@ec2-44-198-236-169.compute-1.amazonaws.com:5432/dba9n88jl9q9hj'
 
 # The hooks that will be performed when the package is deployed.
 hooks:
