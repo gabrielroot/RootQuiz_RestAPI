@@ -18,7 +18,8 @@ runtime:
     extensions:
         - pgsql
         - pdo
-        
+        - pdo_pgsql
+        - xml
 variables:
     env:
         # Tell Symfony to always install in production-mode.
