@@ -1,0 +1,4 @@
+doctrine:
+  dbal:
+    # All in one single line (default)
+    url: '%env(DATABASE_URL)%'
