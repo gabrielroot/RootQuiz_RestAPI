@@ -58,6 +58,9 @@ mounts:
     "/var/sessions":
         source: local
         source_path: "sessions"
+    "app/sessions":
+        source: local
+        source_path: sessions
 
 # The configuration of app when it is exposed to the web.
 web:
