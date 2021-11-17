@@ -13,6 +13,6 @@ class IndexController extends AbstractController
      * @Route("/", name="appIndex", methods="GET")
      */
     public function index(): Response{
-        return $this->json(["QUIZROOT_API"=>"Tudo OK!"],200);
+        return $this->json(["QUIZROOT_API_v1"=>"Tudo OK!"],200);
     }
 }
