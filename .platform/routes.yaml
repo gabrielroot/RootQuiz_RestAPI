@@ -3,6 +3,8 @@
     upstream: "app:http"
     cache:
         enabled: true
+        headers: ["Accept", "Accept-Language", "Cache-Control", "Set-Cookie	"]
+        cookies: ["*"]
 
 "https://{default}/":
     type: redirect
