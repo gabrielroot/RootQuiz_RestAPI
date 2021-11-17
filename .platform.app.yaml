@@ -13,12 +13,6 @@ build:
 dependencies:
     php:
         composer/composer: '^2'
-
- cache:
-    enabled: true
-    default_ttl: 0
-    cookies: ['*']
-    headers: ['Accept', 'Accept-Language']
         
 runtime:
     extensions:
