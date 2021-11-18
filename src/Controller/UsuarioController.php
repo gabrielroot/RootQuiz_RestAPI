@@ -8,25 +8,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class UsuarioController extends AbstractController
 {
-
-    /**
-     * @var Usuario
-     */
-    protected $currentUser;
-
-    /**
-     * @param TokenStorageInterface $tokenStorage
-     */
-    public function __construct(TokenStorageInterface $tokenStorage)
-    {
-        $this->currentUser = $tokenStorage->getToken()?$tokenStorage->getToken()->getUser():null;
-    }
-
     /**
      * @Route("/usuario", name="indexUsuario", methods="GET")
      */
@@ -51,15 +37,15 @@ class UsuarioController extends AbstractController
     /**
      * @Route("/usuario/login", name="api_login", methods="POST")
      */
-    public function login(): Response{
-        if (null === $this->currentUser) {
+    public function login(Security $security): Response{
+        if (null === $security->getUser()->getUserIdentifier()) {
             return $this->json([
                 'message' => 'missing credentials',
             ], Response::HTTP_UNAUTHORIZED);
         }
 
         $usuarioRepository = $this->getDoctrine()->getRepository(Usuario::class);
-        $usuarioEncontrado = $usuarioRepository->findOneBy(['username'=>$this->currentUser->getUserIdentifier()]);
+        $usuarioEncontrado = $usuarioRepository->findOneBy(['username'=>$security->getUser()->getUserIdentifier()]);
 
         return $this->json([
             'id'  => $usuarioEncontrado->getId(),
