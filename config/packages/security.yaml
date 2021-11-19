@@ -44,5 +44,4 @@ security:
          - { path: '^/$', roles: PUBLIC_ACCESS }
          - { path: '^/usuario/(login|logout|signup)', roles: PUBLIC_ACCESS }
          - { path: '^/(tentativa|resposta)/\d+$', roles: ROLE_ADMIN }
-         - { path: '^/pergunta/aleatoria', roles: ROLE_USER }
          - { path: '^/(usuario|pergunta|tentativa)', roles: ROLE_USER }

@@ -22,7 +22,19 @@ class PerguntasRepository extends ServiceEntityRepository
      /**
       * @return Pergunta[] Returns an array of Pergunta objects
       */
-    public function getPerguntasRespostas($userId)
+    public function getPerguntasRespostas()
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.respostas','r','WITH')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
+     * @return Pergunta[] Returns an array of Pergunta objects
+     */
+    public function getPerguntasRespostasPorUsuario($userId)
     {
         return $this->createQueryBuilder('p')
             ->innerJoin('p.respostas','r','WITH')
@@ -30,7 +42,7 @@ class PerguntasRepository extends ServiceEntityRepository
             ->setParameter('userid', $userId)
             ->getQuery()
             ->getResult()
-        ;
+            ;
     }
 
     /*

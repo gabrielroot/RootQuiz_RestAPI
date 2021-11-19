@@ -18,12 +18,45 @@ class PerguntaController extends AbstractController
      * @Route("/pergunta", name="indexPergunta", methods="GET")
      */
     public function index(): Response{
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $query = $this->getDoctrine()
+            ->getRepository(Pergunta::class)
+            ->getPerguntasRespostas();
+
+        $perguntas = array();
+        foreach ($query as $item){
+            $respostas = array();
+            $i = 0;
+            foreach ($item->getRespostas() as $valor){
+                $respostas[] = [
+                    'id'=> $valor->getId(),
+                    'alternativa'=> $valor->getAlternativa()
+                ];
+                $i++;
+            }
+            $perguntas[] = array(
+                'id'=>$item->getId(),
+                'respostaCorreta'=>$item->getRespostaCorreta(),
+                'questao'=>$item->getQuestao(),
+                'criadaPor'=>$item->getUsuario()?$item->getUsuario()->getId():null,
+                'respostas'=>$respostas
+            );
+        }
+
+        return $this->json($perguntas, 200);
+    }
+
+
+    /**
+     * @Route("/pergunta/minhas", name="perguntaPorUsuario", methods="GET")
+     */
+    public function perguntaPorUsuario(): Response{
         $usuarioRepository = $this->getDoctrine()->getRepository(Usuario::class);
         $usuarioEncontrado = $usuarioRepository->findOneBy(['username'=>$this->getUser()->getUserIdentifier()]);
 
         $query = $this->getDoctrine()
             ->getRepository(Pergunta::class)
-            ->getPerguntasRespostas($usuarioEncontrado->getId());
+            ->getPerguntasRespostasPorUsuario($usuarioEncontrado->getId());
 
         $perguntas = array();
         foreach ($query as $item){
