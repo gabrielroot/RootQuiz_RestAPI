@@ -17,6 +17,12 @@ Um web app para fins de estudo. O objeto de aprendizagem foi o framework php Sym
     2. Axios
     3. Semantic-UI
 
+## Diagramas
+### Diagrama de Classe
+![Diagrama de Classe](Quizroot-DiagramaClasse.drawio.png "Diagrama de Classe")
+### Login
+![Diagrama de Casos de Uso](Quizroot-DiagramaCasosDeUso.drawio.png "Diagrama de Casos de Uso")
+
 ## Capturas
 ### Login
 ![Login](login.png "Login")
