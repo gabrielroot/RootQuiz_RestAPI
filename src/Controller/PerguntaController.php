@@ -18,9 +18,12 @@ class PerguntaController extends AbstractController
      * @Route("/pergunta", name="indexPergunta", methods="GET")
      */
     public function index(): Response{
+        $usuarioRepository = $this->getDoctrine()->getRepository(Usuario::class);
+        $usuarioEncontrado = $usuarioRepository->findOneBy(['username'=>$this->getUser()->getUserIdentifier()]);
+
         $query = $this->getDoctrine()
             ->getRepository(Pergunta::class)
-            ->getPerguntasRespostas();
+            ->getPerguntasRespostas($usuarioEncontrado->getId());
 
         $perguntas = array();
         foreach ($query as $item){

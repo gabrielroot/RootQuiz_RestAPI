@@ -22,10 +22,12 @@ class PerguntasRepository extends ServiceEntityRepository
      /**
       * @return Pergunta[] Returns an array of Pergunta objects
       */
-    public function getPerguntasRespostas()
+    public function getPerguntasRespostas($userId)
     {
         return $this->createQueryBuilder('p')
             ->innerJoin('p.respostas','r','WITH')
+            ->where('p.usuario = :userid')
+            ->setParameter('userid', $userId)
             ->getQuery()
             ->getResult()
         ;
