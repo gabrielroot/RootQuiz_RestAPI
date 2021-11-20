@@ -1,8 +1,6 @@
 # RootQuiz_SymfonyRestAPI
 Um web app para fins de estudo. O objeto de aprendizagem foi o framework php Symfony: Foi construída uma API Rest. Formulei um cenário com 2 níveis de acesso e quatro entidades.
 
-## [[ -- LINK DO DEPLOY --]](https://www.main-bvxea6i-6dmvizzvxzmvi.us-3.platformsh.site/login)
-
 ### Tecnologias
 ##### REST [[Link do Repo]](https://github.com/gabrielroot/RootQuiz_SymfonyRestAPI)
 - PHP 7.4
